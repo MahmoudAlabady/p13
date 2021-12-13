@@ -12,3 +12,4 @@ x::test();
 
 // absolute path , relative path
 // namespace
+// class autoload

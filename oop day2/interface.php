@@ -37,6 +37,11 @@ class cat extends parentAnimal implements animal {
     public function drink(){
         echo "milk <br>";
     }
+
+    public function run()
+    {
+       
+    }
 }
 
 
