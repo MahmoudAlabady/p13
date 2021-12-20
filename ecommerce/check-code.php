@@ -4,6 +4,19 @@ include_once 'layouts/header.php';
 include_once "app/requests/CheckcodeRequest.php";
 include_once "app/database/models/User.php";
 
+if($_GET){
+    if(isset($_GET['page'])){
+        $pages = ['login','register','verify-email'];
+        if(!in_array($_GET['page'],$pages)){
+            header('location:errors/404.php');die;
+        }
+    }else{
+        header('location:errors/404.php');die;
+    }
+}else{
+    header('location:errors/404.php');die;
+}
+
 if($_POST){
     $validation = new CheckcodeRequest;
     $validation->setCode($_POST['code']);
@@ -20,7 +33,14 @@ if($_POST){
             $userObject->setStatus(1);
             $result = $userObject->updateStatus();
             if($result){
-                header('location:login.php');die;
+                switch ($_GET['page']) {
+                    case 'login':
+                    case 'register' :
+                        header('location:login.php');die;
+                    default:
+                        header('location:set-new-password.php');die;
+                }
+                
             }
            
         }

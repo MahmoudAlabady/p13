@@ -303,7 +303,16 @@ class User extends connection implements crud {
         $query =  "SELECT * FROM users WHERE email = '$this->email' AND `password` = '$this->password' ";
         return $this->runDQL($query);
     }
-
+    public function updateCode()
+    {
+        $query =  "UPDATE `users` SET `code` = $this->code WHERE `email` = '$this->email' ";
+        return $this->runDML($query);
+    }
+    public function updatePassword()
+    {
+        $query =  "UPDATE `users` SET `password` = '$this->password' WHERE `email` = '$this->email' ";
+        return $this->runDML($query);
+    }
     
 }
 

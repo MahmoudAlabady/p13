@@ -1,6 +1,7 @@
 <?php
 $title = "Login";
 include_once 'layouts/header.php';
+include_once "app/middleware/guest.php";
 include_once 'layouts/nav.php';
 include_once 'layouts/breadcrumb.php';
 include_once "app/requests/RegisterRequest.php";
@@ -33,7 +34,7 @@ if($_POST)
                    header('location:index.php');die;
                 case '0':
                     $_SESSION['checkcode-email'] = $_POST['email'];
-                    header('location:check-code.php');die;
+                    header('location:check-code.php?page=login');die;
                 default:
                     $message = "<div class='alert alert-danger'> Sorry , Your Account Has been Blocked </div>";
                     break;
@@ -89,7 +90,7 @@ if($_POST)
                                             <div class="login-toggle-btn">
                                                 <input type="checkbox">
                                                 <label>Remember me</label>
-                                                <a href="#">Forgot Password?</a>
+                                                <a href="verify-email.php">Forgot Password?</a>
                                             </div>
                                             <button type="submit"><span>Login</span></button>
                                         </div>

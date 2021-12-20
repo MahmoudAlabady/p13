@@ -1,6 +1,7 @@
 <?php
 $title = "Register";
 include_once 'layouts/header.php';
+include_once "app/middleware/guest.php";
 include_once 'layouts/nav.php';
 include_once 'layouts/breadcrumb.php';
 include_once "app/requests/RegisterRequest.php";
@@ -42,7 +43,7 @@ if($_POST){
             if($mailResult){
                 // header location => check-code.php
                 $_SESSION['checkcode-email'] = $_POST['email'];
-                header('location:check-code.php');die;
+                header('location:check-code.php?page=register');die;
             }
            
         }
