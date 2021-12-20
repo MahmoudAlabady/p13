@@ -260,7 +260,7 @@ class User extends connection implements crud {
     {
         $query = "INSERT INTO `users` (`first_name`,`last_name`,`email`,`phone`,`password`,`gender`,`code`) VALUES 
         ('$this->first_name','$this->last_name','$this->email','$this->phone','$this->password','$this->gender',$this->code)";
-        echo $query;die;
+        // echo $query;die;
         return $this->runDML($query);
     }
     public function read()
@@ -287,6 +287,23 @@ class User extends connection implements crud {
         $query =  "SELECT * FROM users WHERE phone = '$this->phone' ";
         return $this->runDQL($query);
     }
+    public function checkCode()
+    {
+        $query =  "SELECT * FROM users WHERE email = '$this->email' AND code = $this->code ";
+        return $this->runDQL($query);
+    }
+    public function updateStatus()
+    {
+        $query =  "UPDATE `users` SET `status` = $this->status WHERE `email` = '$this->email' ";
+        return $this->runDML($query);
+    }
+
+    public function login()
+    {
+        $query =  "SELECT * FROM users WHERE email = '$this->email' AND `password` = '$this->password' ";
+        return $this->runDQL($query);
+    }
+
     
 }
 

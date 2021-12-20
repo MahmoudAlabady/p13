@@ -1,6 +1,34 @@
 <?php
 $title = "Check Code";
 include_once 'layouts/header.php';
+include_once "app/requests/CheckcodeRequest.php";
+include_once "app/database/models/User.php";
+
+if($_POST){
+    $validation = new CheckcodeRequest;
+    $validation->setCode($_POST['code']);
+    $validationResult = $validation->codeValidation();
+    
+    if(empty($validationResult)){
+        // search on code,email in db
+        $userObject = new user;
+        $userObject->setCode($_POST['code']);
+        $userObject->setEmail($_SESSION['checkcode-email']);
+        $checkCodeResult = $userObject->checkCode();
+        if($checkCodeResult){
+            // true => status = 1 => header to login page
+            $userObject->setStatus(1);
+            $result = $userObject->updateStatus();
+            if($result){
+                header('location:login.php');die;
+            }
+           
+        }
+       
+        
+    }
+
+}
 ?>
 <div class="login-register-area ptb-100">
     <div class="container">
@@ -16,8 +44,22 @@ include_once 'layouts/header.php';
                         <div id="lg1" class="tab-pane active">
                             <div class="login-form-container">
                                 <div class="login-register-form">
-                                    <form action="#" method="post">
+                                    <form  method="post">
                                         <input type="number" name="code" placeholder="Code">
+                                        <?php 
+                                            if(!empty($validationResult)){
+                                                foreach ($validationResult as $key => $error) {
+                                                    echo $error;
+                                                }
+                                            }
+                                            if(isset($checkCodeResult) && empty($checkCodeResult)){
+                                                echo "<div class='alert alert-danger'> Wrong Code </div>";
+                                            }
+
+                                            if(isset($result) && ! $result){
+                                                echo "<div class='alert alert-danger'> Something Went Wrong </div>";
+                                            }
+                                        ?>
                                             <button type="submit" class="btn btn-success"><span>Check</span></button>
                                         </div>
                                     </form>

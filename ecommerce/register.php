@@ -5,6 +5,7 @@ include_once 'layouts/nav.php';
 include_once 'layouts/breadcrumb.php';
 include_once "app/requests/RegisterRequest.php";
 include_once "app/database/models/User.php";
+include_once "app/mail/mail.php";
 if($_POST){
     $validation = new RegisterRequest;
     $validation->setEmail($_POST['email']);
@@ -34,8 +35,16 @@ if($_POST){
         $result = $userObject->create();
         if($result){
             // send mail with code
-            // header location => check-code.php
-            header('location:check-code.php');die;
+            $subject = "Ecommerce-Verification-Code";
+            $body = "<p> Hello {$_POST['first_name']}</p><p> Your Verification Code is:<b style='color:blue;'>$code</b> </p><p> Thank you.</p>";
+            $mail = new mail($_POST['email'],$subject,$body);
+            $mailResult = $mail->send();
+            if($mailResult){
+                // header location => check-code.php
+                $_SESSION['checkcode-email'] = $_POST['email'];
+                header('location:check-code.php');die;
+            }
+           
         }
     }
 
@@ -61,6 +70,11 @@ if($_POST){
                                     <?php 
                                         if(isset($result) && !$result){
                                             echo "<div class='alert alert-danger'> Try Agian Later </div>";
+                                        }
+
+                                        if(isset($mailResult) && ! $mailResult){
+                                            // header location => check-code.php
+                                            echo "<div class='alert alert-danger'> Something Went Wrong </div>";
                                         }
                                     ?>
                                     <form method="post">
