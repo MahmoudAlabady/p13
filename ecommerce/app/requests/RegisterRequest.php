@@ -1,6 +1,6 @@
 <?php
 // autoload class
-include __DIR__ . "\..\database\models\User.php";
+include_once __DIR__ . "\..\database\models\User.php";
 class RegisterRequest
 {
     private $password;

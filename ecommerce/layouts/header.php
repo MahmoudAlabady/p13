@@ -1,6 +1,15 @@
 <?php 
 ob_start();
 session_start();
+
+if(isset($_COOKIE['user'])){
+    include "app/database/models/User.php";
+    $userObject = new user;
+    $userObject->setEmail($_COOKIE['user']);
+    $result = $userObject->emailExists();
+    $user = $result->fetch_object();
+    $_SESSION['user'] = $user;
+}
 ?>
 <!doctype html>
 <html class="no-js" lang="zxx">

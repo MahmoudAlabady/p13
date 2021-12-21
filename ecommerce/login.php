@@ -9,6 +9,7 @@ include_once "app/requests/LoginRequest.php";
 include_once "app/database/models/User.php";
 if($_POST)
 {
+    // print_r($_POST);die;
     // validation => 
     // email => required , regex
     $emailValidation = new RegisterRequest;
@@ -31,6 +32,9 @@ if($_POST)
             switch ($user->status) {
                 case '1':
                     $_SESSION['user'] = $user;
+                    if(isset($_POST['remember_me'])){
+                        setcookie('user', $_POST['email'] , time() + (86400 * 30) , '/');
+                    }
                    header('location:index.php');die;
                 case '0':
                     $_SESSION['checkcode-email'] = $_POST['email'];
@@ -88,7 +92,7 @@ if($_POST)
                                         ?>
                                         <div class="button-box">
                                             <div class="login-toggle-btn">
-                                                <input type="checkbox">
+                                                <input type="checkbox" name="remember_me">
                                                 <label>Remember me</label>
                                                 <a href="verify-email.php">Forgot Password?</a>
                                             </div>
