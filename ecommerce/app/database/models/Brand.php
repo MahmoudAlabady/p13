@@ -2,7 +2,7 @@
 include_once __DIR__."\..\config\connection.php";
 include_once __DIR__."\..\config\crud.php";
 
-class Category extends connection implements crud {
+class Brand extends connection implements crud {
     private $id;
     private $name_en;
     private $name_ar;
@@ -157,13 +157,12 @@ class Category extends connection implements crud {
     }
     public function read()
     {
-        $query = "SELECT id,name_en FROM categories WHERE status = $this->status ORDER BY name_en";
-        return $this->runDQL($query);
+        
     }
 
-    public function getCatById()
+    public function getBrandById()
     {
-        $query = "SELECT id,name_en FROM categories WHERE status = $this->status AND `id` = $this->id ORDER BY name_en";
+        $query = "SELECT id,name_en FROM brands WHERE status = $this->status AND `id` = $this->id";
         return $this->runDQL($query);
     }
 

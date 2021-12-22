@@ -183,7 +183,8 @@ class Subcategory extends connection implements crud {
     }
     public function read()
     {
-        # code...
+        $query = "SELECT `id`,`name_en` FROM `subcategories` WHERE `status` = $this->status AND `category_id` = $this->category_id";
+        return $this->runDQL($query);
     }
     public function update()
     {
@@ -192,5 +193,11 @@ class Subcategory extends connection implements crud {
     public function delete()
     {
         # code...
+    }
+
+    public function getSubById()
+    {
+        $query = "SELECT `id`,`name_en` FROM `subcategories` WHERE `status` = $this->status AND `id` = $this->id";
+        return $this->runDQL($query);
     }
 }
