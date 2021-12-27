@@ -3,9 +3,11 @@
 @section('title', 'Edit Product')
 
 @section('content')
-
+    @include('includes.flash-message')
     <div class="col-12">
-        <form>
+        <form method="post" enctype="multipart/form-data" action="{{route('dashboard.products.update',$product->id)}}">
+            @csrf
+            @method('PUT')
             <div class="card-body">
                 <div class="form-row">
                     <div class="col-6">
@@ -69,20 +71,22 @@
                     <label for="exampleInputFile">File input</label>
                     <div class="input-group">
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="exampleInputFile">
+                            <input type="file" name="image" class="custom-file-input" id="exampleInputFile">
                             <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <img src="{{url('images/products/'.$product->image)}}" alt="{{$product->name_en}}">
+                <div class="form-row">
+                    <div class="col-4">
+                        <img src="{{url('images/products/'.$product->image)}}" alt="{{$product->name_en}}" class="w-100">
+                    </div>
                 </div>
             </div>
             <!-- /.card-body -->
 
             <div class="card-footer">
-                <button type="submit" class="btn btn-warning">Update</button>
-                <button type="submit" class="btn btn-dark">Update & Return</button>
+                <button type="submit" class="btn btn-warning" name="page" value="index">Update</button>
+                <button type="submit" class="btn btn-dark"  name="page" value="back">Update & Return</button>
             </div>
         </form>
     </div>

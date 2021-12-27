@@ -3,6 +3,7 @@
 @section('title', 'Create Product')
 
 @section('content')
+    @include('includes.flash-message')
     <div class="col-12">
         {{-- @if ($errors->any())
             <div class="alert alert-danger">
@@ -123,7 +124,7 @@
 
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary" name="page" value="index">Create</button>
-                <button type="submit" class="btn btn-dark"  name="page" value="create">Create & Return</button>
+                <button type="submit" class="btn btn-dark"  name="page" value="back">Create & Return</button>
             </div>
         </form>
     </div>

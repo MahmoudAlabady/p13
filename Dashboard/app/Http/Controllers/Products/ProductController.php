@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Products;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DestroyProductRequest;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Http\traits\media;
 class ProductController extends Controller
 {
+    use media;
     public function index()
     {
         $products = DB::table('products')->select('id','name_en','price','status','quantity','created_at')->get();
@@ -29,37 +33,56 @@ class ProductController extends Controller
         return view('products.edit',compact('product','brands','subcategories'));
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        // dd($request->all());
-        // dd(public_path('images\products\\'));
-        // validation
-        $rules = [
-            'name_en'=>['required','max:50'],
-            'name_ar'=>['required','max:50'],
-            'price'=>['required','numeric','max:99999.99','min:1'],
-            'quantity'=>['required','integer','max:999','min:1'],
-            'status'=>['required','integer','min:0','max:1'],
-            'desc_en'=>['required','string'],
-            'desc_ar'=>['required','string'],
-            'brand_id'=>['nullable','integer','exists:brands,id'],
-            'subcategory_id'=>['required','integer','exists:subcategories,id'],
-            'image'=>['required','max:1000','mimes:png,jpg,jpeg']
-        ];
-        $request->validate($rules); // automatic redirection 
-        // upload photo
-        $photoName = time() . '.' . $request->image->extension(); //23122123.png
-        $request->image->move(public_path('images\products\\'),$photoName); //public_path() => public path as absolute path
-        // insert product into db
+
         $data = $request->except('_token','image','page');
-        $data['image'] = $photoName;
-        // dd($data);
+        // upload photo
+        $data['image'] = $this->upload($request->image,'products');
+        // insert into database
         DB::table('products')->insert($data);
-        // success message in specific view according to request
-        if($request->page == 'create'){
-            return redirect()->back();
+        // success message according to request
+        return $this->returnAccordingToRequest($request);
+    }
+
+
+    public function update(UpdateProductRequest $request,$id)
+    {
+
+        $data = $request->except('_token','_method','image','page'); 
+        // upload photo if exists
+        if($request->has('image')){
+            // upload photo
+            $data['image'] = $this->upload($request->image,'products');
+            // get old photo name
+            $oldPhotoName = DB::table('products')->select('image')->where('id',$id)->first()->image;
+            // delete old photo
+            $this->delete($oldPhotoName,'products');
+        }
+        // update into database
+        DB::table('products')->where('id',$id)->update($data);
+        
+        // success message according to request
+        return $this->returnAccordingToRequest($request);
+    }
+
+    public function destroy(DestroyProductRequest $request)
+    {
+        $oldPhotoName = DB::table('products')->select('image')->where('id',$request->id)->first()->image;
+        // delete old photo
+        $this->delete($oldPhotoName,'products');
+        // delete product from database
+        DB::table('products')->where('id',$request->id)->delete(); 
+        // success message according to request
+        return redirect()->back()->with('success','Operation Successfull');
+    }
+
+
+    private function returnAccordingToRequest(Request $request){
+        if($request->page == 'back'){
+            return redirect()->back()->with('success','Operation Successfull');
         }else{
-            return redirect()->route('dashboard.products.index');
+            return redirect()->route('dashboard.products.index')->with('success','Operation Successfull');
         }
     }
 }

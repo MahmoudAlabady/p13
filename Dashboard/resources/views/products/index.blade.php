@@ -10,6 +10,18 @@
 @endsection
 
 @section('content')
+    @include('includes.flash-message')
+    <div class="col-12">
+        {{-- @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif --}}
+    </div>
     <div class="col-12">
         <table id="example1" class="table table-bordered table-striped">
             <thead>
@@ -39,8 +51,13 @@
                         <td class="{{$product->status ? 'text-success' : 'text-danger'}}">{{$product->status ? 'Active' : 'Not Active'}}</td> 
                         <td>{{$product->created_at}}</td>
                         <td>
-                            <a href="{{route('dashboard.products.edit',$product->id)}}" class="btn btn-warning rounded">Edit</a>
-                            <a href="#" class="btn btn-danger rounded">Delete</a>
+                            <a href="{{route('dashboard.products.edit',$product->id)}}" class="btn btn-warning rounded">Edit</a> 
+                            <form class="d-inline" action="{{route('dashboard.products.destroy')}}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="id" value="{{$product->id}}">
+                                <button class="btn btn-danger rounded"> Delete </button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
