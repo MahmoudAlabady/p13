@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\apis\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\apis\ProductController;
+use App\Http\Controllers\apis\Auth\RegisterController;
+use App\Http\Controllers\apis\Auth\EmailVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +32,12 @@ Route::group(['prefix'=>'products'],function(){
 });
 
 // authentication token
-
+Route::group(['prefix'=>'users'],function(){
+    Route::post('register',RegisterController::class); // invokable controller
+    Route::post('send-code',[EmailVerificationController::class,'sendCode']);
+    Route::post('check-code',[EmailVerificationController::class,'checkCode']);
+    Route::post('email-verification',[EmailVerificationController::class,'emailVerification']);
+    // profile
+    // logout
+    // forget password
+});
