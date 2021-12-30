@@ -8,7 +8,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\traits\ApiTrait;
-
+use App\Mail\SendCode;
+use Illuminate\Support\Facades\Mail;
 class EmailVerificationController extends Controller
 {
     use ApiTrait;
@@ -20,6 +21,7 @@ class EmailVerificationController extends Controller
        $user->code = rand(10000,99999);
        $user->save();
        // send mail with code
+        Mail::to($user)->send(new SendCode($user));
        $user->token = $token;
         return $this->Data(compact('user'),'Mail Sent Successfully');
     }

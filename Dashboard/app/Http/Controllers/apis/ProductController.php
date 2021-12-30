@@ -12,12 +12,14 @@ use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use App\Http\traits\media;
 use App\Http\traits\ApiTrait;
+use Illuminate\Support\Facades\App;
+
 class ProductController extends Controller
 {
     use media,ApiTrait;
     public function index()
     {
-        $products = Product::all(); // array of objects , object -> product -> image
+        $products = Product::select('id','name_'.App::currentLocale().' AS name','desc_'.App::currentLocale().' AS desc')->get(); // array of objects , object -> product -> image
         return $this->Data(compact('products'));
     }
 
@@ -57,8 +59,8 @@ class ProductController extends Controller
             Product::where('id',$id)->update($data);
             return $this->SuccessMessage('Product Updated Successfully',200);
         }else{
-            $id = "selected Id Is Invalid";
-            return $this->ErrorMessage(compact('id'),'Product Not Found',404);
+            $id = __('message.errors.selected Id Is Invalid');
+            return $this->ErrorMessage(compact('id'),__('message.errors.product not found'),404);
         }
        
     }

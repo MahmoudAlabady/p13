@@ -36,7 +36,6 @@ Route::group(['prefix'=>'products','middleware'=>'VerifiedApi'],function(){
 
 // authentication token
 Route::group(['prefix'=>'users'],function(){
-
     // guest
     Route::post('register',RegisterController::class); // invokable controller
     Route::post('login',[LoginController::class,'login']);
@@ -54,9 +53,5 @@ Route::group(['prefix'=>'users'],function(){
     Route::group(['middleware'=>'VerifiedApi'],function(){
         Route::post('profile',ProfileController::class);
         Route::post('set-new-password',[PasswordController::class,'setNewPassword']);
-    
     });
-   
-    
-   
 });
